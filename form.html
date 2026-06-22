@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足関節底屈運動実験 参加日程登録</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f0f4f9; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; color: #202124; min-height: 100vh; padding: 24px 16px 60px; }
+.container { max-width: 640px; margin: 0 auto; }
+.header-card { background: #fff; border-radius: 8px; border-top: 8px solid #673ab7; padding: 24px 24px 20px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.header-card h1 { font-size: 22px; font-weight: 700; color: #202124; margin-bottom: 16px; line-height: 1.4; }
+.header-card p { font-size: 14px; color: #444; line-height: 1.9; white-space: pre-line; }
+.divider { border: none; border-top: 1px solid #e0e0e0; margin: 16px 0; }
+.section-label { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 6px; margin-top: 14px; }
+.info-text { font-size: 13px; color: #444; line-height: 1.85; white-space: pre-line; }
+.warn-text { font-size: 13px; color: #b71c1c; background: #fff8f8; border-left: 3px solid #e53935; padding: 10px 12px; border-radius: 0 6px 6px 0; line-height: 1.8; margin-top: 4px; }
+.card { background: #fff; border-radius: 8px; padding: 22px 24px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.q-label { font-size: 15px; font-weight: 500; color: #202124; margin-bottom: 4px; line-height: 1.5; }
+.q-sub { font-size: 12px; color: #777; margin-bottom: 14px; }
+.required { color: #d93025; margin-left: 3px; }
+input[type=text], input[type=email] { width: 100%; border: none; border-bottom: 1px solid #ccc; padding: 8px 2px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; color: #202124; outline: none; background: transparent; transition: border-color 0.2s; }
+input[type=text]:focus, input[type=email]:focus { border-bottom: 2px solid #673ab7; }
+input::placeholder { color: #bbb; }
+textarea { width: 100%; border: none; border-bottom: 1px solid #ccc; padding: 8px 2px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; color: #202124; outline: none; background: transparent; resize: none; min-height: 60px; transition: border-color 0.2s; }
+textarea:focus { border-bottom: 2px solid #673ab7; }
+.cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-nav-btn { background: none; border: none; cursor: pointer; padding: 6px 10px; border-radius: 50%; font-size: 18px; color: #555; transition: background 0.15s; }
+.cal-nav-btn:hover { background: #f1f1f1; }
+.cal-month-title { font-size: 15px; font-weight: 700; color: #202124; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-dow { text-align: center; font-size: 11px; font-weight: 700; color: #777; padding: 6px 0; }
+.cal-dow.sun { color: #d93025; } .cal-dow.sat { color: #1a73e8; }
+.cal-cell { text-align: center; padding: 6px 2px 5px; border-radius: 10px; font-size: 13px; cursor: pointer; color: #202124; transition: background 0.12s; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.cal-cell:hover:not(.empty):not(.past) { background: #ede7f6; }
+.cal-cell.empty { cursor: default; } .cal-cell.past { color: #ccc; cursor: not-allowed; }
+.cal-cell.sun { color: #d93025; } .cal-cell.sat { color: #1a73e8; }
+.cal-cell.selected { background: #673ab7; color: #fff !important; font-weight: 700; }
+.cal-cell.selected .cal-avail { color: #d8caf0 !important; }
+.cal-cell.today:not(.selected) { border: 2px solid #673ab7; font-weight: 700; }
+.cal-avail { font-size: 8.5px; color: #1a8a6e; line-height: 1.1; font-weight: 500; }
+.cal-cell.past .cal-avail { color: #ddd; }
+.avail-hint { font-size: 12px; color: #1a8a6e; background: #e8f7f0; border-radius: 6px; padding: 6px 10px; margin-top: -2px; margin-bottom: 8px; display: inline-block; }
+.slots-wrap { margin-top: 16px; }
+.slot-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; flex-wrap: wrap; }
+.slot-item:last-child { border-bottom: none; }
+.slot-date-label { font-size: 13px; font-weight: 500; color: #202124; min-width: 110px; }
+.slot-avail-hint { font-size: 11px; color: #1a8a6e; background: #e8f7f0; border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+.time-wrap { display: flex; align-items: center; gap: 6px; }
+input[type=time] { border: 1px solid #ccc; border-radius: 4px; padding: 5px 8px; font-size: 13px; font-family: 'Noto Sans JP', sans-serif; color: #202124; outline: none; width: 108px; background: #fafafa; }
+input[type=time]:focus { border-color: #673ab7; }
+.time-sep { font-size: 13px; color: #777; }
+.slot-del { background: none; border: none; cursor: pointer; color: #aaa; font-size: 18px; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: color 0.15s; }
+.slot-del:hover { color: #d93025; }
+.no-slots { font-size: 13px; color: #bbb; padding: 8px 0; }
+.submit-row { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+.btn-submit { background: #673ab7; color: #fff; border: none; border-radius: 4px; padding: 11px 26px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+.btn-submit:hover { background: #512da8; }
+.btn-clear { background: none; border: none; color: #673ab7; font-family: 'Noto Sans JP', sans-serif; font-size: 13px; cursor: pointer; padding: 4px 0; }
+.btn-clear:hover { text-decoration: underline; }
+.success-card { background: #fff; border-radius: 8px; border-top: 8px solid #673ab7; padding: 40px 24px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.success-card .icon { font-size: 48px; margin-bottom: 12px; }
+.success-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+.success-card p { font-size: 14px; color: #555; line-height: 1.8; }
+.btn-mailto { display: inline-block; margin-top: 20px; background: #673ab7; color: #fff; border: none; border-radius: 4px; padding: 11px 24px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+.btn-mailto:hover { background: #512da8; }
+.btn-again { display: inline-block; margin-top: 10px; background: none; border: 1px solid #673ab7; color: #673ab7; border-radius: 4px; padding: 9px 22px; font-family: 'Noto Sans JP', sans-serif; font-size: 13px; cursor: pointer; }
+.btn-again:hover { background: #f3eeff; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- FORM -->
+  <div id="page-form">
+    <div class="header-card">
+      <h1>足関節底屈運動実験<br>参加日程登録フォーム</h1>
+      <p>ご協力いただきありがとうございます。
+注意点と内容をご確認いただいた上でご参加いただける場合は、参加可能な日程をなるべく多く入力していただけますと幸いです。
+日程決定までに予定が変わってしまった場合は、お手数ですが再度ご回答いただけますと幸いです。</p>
+
+      <hr class="divider">
+      <div class="section-label">⚠️ 参加条件</div>
+      <div class="warn-text">
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li style="padding:3px 0;">・18〜29歳の男性の方</li>
+          <li style="padding:3px 0;">・右足（膝等）に過去の負傷歴があり、全力の底屈運動にためらいが出てしまう方は<b>参加いただけません</b></li>
+        </ul>
+      </div>
+
+      <hr class="divider">
+      <div class="section-label">🔬 実験内容</div>
+      <div class="info-text">右足関節の底屈運動（地面を強く蹴る・足首を伸ばす方向の運動）の実験です。うつ伏せの状態で膝を伸ばし、足関節を動かしていただきます。
+
+<b>1日目</b>：練習（所要時間 約1時間）
+<b>2・3日目</b>：足を温めた場合（温熱）と何もしない場合の2条件（各 約2時間）
+
+終わり次第解散となります。
+（温熱の日は2時間強となる可能性がございます。その際は、お詫びとしてお菓子をご用意いたします。）
+
+評価項目：筋束速度、筋活動（LG・SOL・TA）、筋温、トルク</div>
+
+      <hr class="divider">
+      <div class="section-label">📋 詳細</div>
+      <div class="info-text"><b>期間：</b>6/29（日）〜 8/31（日）予定
+<b>場所：</b>駒場キャンパス 第二体育館内 実験室
+<b>服装：</b>右足の膝下が出せる格好（超音波・筋電装着のため。半ズボンはこちらでもご用意はしておきます。）
+筋電をつける箇所は、毛を剃らせていただきます。
+<b>謝礼：</b>時給1000円（3日間で計5,000円（交通費込）の予定。銀行振込）
+
+<b>担当：</b>宮脇康太（久保研究室 M1）
+<b>連絡先：</b>kotamiya-jubi1020@g.ecc.u-tokyo.ac.jp
+ご回答いただいた方から順番にご連絡いたします。疑問点等はいつでもご連絡ください。</div>
+    </div>
+
+    <div class="card">
+      <div class="q-label">お名前<span class="required">*</span></div>
+      <div class="q-sub">姓名</div>
+      <input type="text" id="f-name" placeholder="山田 太郎">
+    </div>
+
+    <div class="card">
+      <div class="q-label">メールアドレス<span class="required">*</span></div>
+      <input type="email" id="f-email" placeholder="example@email.com">
+    </div>
+
+    <div class="card">
+      <div class="q-label">参加可能な日程<span class="required">*</span></div>
+      <div class="q-sub">実験は3日間です。参加可能な日程をなるべく多く選択していただけますと幸いです（6/29〜8/31）。<br>※日付を選択後に希望の時間帯を入力できます。時間帯としては、基本的に10:30〜18:00の中で行えればと考えております。</div>
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+        <div class="cal-month-title" id="cal-title"></div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="slots-wrap" id="slots-wrap">
+        <div class="no-slots">日程が選択されていません</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-label">備考・連絡事項</div>
+      <div class="q-sub">任意</div>
+      <textarea id="f-note" placeholder="アレルギー、当日の注意点など"></textarea>
+    </div>
+
+    <div class="card" style="padding:16px 24px;">
+      <div class="submit-row">
+        <button class="btn-submit" onclick="submitForm()">送信</button>
+        <button class="btn-clear" onclick="clearForm()">回答をクリア</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="page-success" style="display:none;">
+    <div class="success-card">
+      <div class="icon">✅</div>
+      <h2>ご回答ありがとうございました！</h2>
+      <p>ご回答いただいた方から順番に、日程決定のご連絡をいたします。<br>
+      ご不明な点は kotamiya-jubi1020@g.ecc.u-tokyo.ac.jp までご連絡ください。</p>
+      <br>
+      <a id="mailto-link" class="btn-mailto" href="#">📧 入力内容を自分にメールで送る</a>
+      <br>
+      <button class="btn-again" onclick="resetForm()">別の方の登録へ</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DAYS = ['日','月','火','水','木','金','土'];
+let selectedDates = {};
+let calYear, calMonth;
+let lastEntry = null;
+
+const LAB_AVAILABILITY = {
+  "2025-06-29": "10:30~14:00",
+  "2025-06-30": "(10:30~12:30) 12:30~18:00",
+  "2025-07-01": "10:30~16:00",
+  "2025-07-02": "(10:30~12:30) 12:30~18:00",
+  "2025-07-03": "10:30~12:00",
+  "2025-07-04": "13:00~18:00",
+  "2025-07-06": "10:30~18:00",
+  "2025-07-07": "10:30~18:00",
+  "2025-07-08": "10:30~16:00",
+  "2025-07-09": "10:30~18:00",
+  "2025-07-10": "10:30~12:00",
+  "2025-07-11": "13:00~18:00",
+  "2025-07-13": "10:30~18:00",
+  "2025-07-14": "10:30~18:00",
+  "2025-07-15": "10:30~18:00",
+  "2025-07-16": "10:30~18:00",
+  "2025-07-17": "10:30~18:00",
+  "2025-07-18": "10:30~18:00",
+  "2025-07-19": "10:30~18:00",
+  "2025-07-20": "10:30~18:00",
+  "2025-07-21": "12:30~18:00",
+  "2025-07-22": "10:30~16:00",
+  "2025-07-23": "10:30~18:00",
+  "2025-07-24": "10:30~18:00",
+  "2025-07-25": "10:30~18:00",
+  "2025-07-26": "10:30~18:00",
+  "2025-07-27": "10:30~18:00",
+  "2025-07-28": "12:30~18:00",
+  "2025-07-29": "10:30~16:00",
+  "2025-07-30": "10:30~18:00",
+  "2025-07-31": "10:30~18:00",
+  "2025-08-01": "10:30~18:00",
+  "2025-08-02": "10:30~18:00",
+  "2025-08-03": "10:30~18:00",
+  "2025-08-04": "12:30~18:00",
+  "2025-08-05": "10:30~18:00",
+  "2025-08-06": "10:30~13:00",
+  "2025-08-07": "10:30~18:00",
+  "2025-08-08": "10:30~18:00",
+  "2025-08-09": "10:30~18:00",
+  "2025-08-10": "10:30~18:00",
+  "2025-08-11": "12:30~18:00",
+  "2025-08-12": "10:30~18:00",
+  "2025-08-13": "10:30~18:00",
+  "2025-08-14": "10:30~18:00",
+  "2025-08-15": "10:30~18:00",
+  "2025-08-16": "10:30~14:00",
+  "2025-08-17": "10:30~18:00",
+  "2025-08-18": "12:30~18:00",
+  "2025-08-19": "10:30~18:00",
+  "2025-08-20": "10:30~18:00",
+  "2025-08-21": "10:30~18:00",
+  "2025-08-22": "10:30~18:00",
+  "2025-08-23": "10:30~18:00",
+  "2025-08-24": "10:30~18:00",
+  "2025-08-25": "12:30~18:00",
+  "2025-08-26": "10:30~18:00",
+  "2025-08-27": "10:30~18:00",
+  "2025-08-28": "10:30~18:00",
+  "2025-08-29": "10:30~18:00",
+  "2025-08-30": "10:30~16:00"
+};
+
+function initCal() {
+  const now = new Date();
+  // Start from June 2025 if current month is before that
+  const startYear = 2025, startMonth = 5; // June = index 5
+  if (now.getFullYear() < startYear || (now.getFullYear() === startYear && now.getMonth() < startMonth)) {
+    calYear = startYear; calMonth = startMonth;
+  } else {
+    calYear = now.getFullYear(); calMonth = now.getMonth();
+  }
+  renderCal();
+}
+
+function changeMonth(d) {
+  calMonth += d;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  renderCal();
+}
+
+function toKey(y,m,d) { return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
+function renderCal() {
+  const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('cal-title').textContent = `${calYear}年 ${months[calMonth]}`;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  ['日','月','火','水','木','金','土'].forEach((d,i) => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow' + (i===0?' sun':i===6?' sat':'');
+    el.textContent = d; grid.appendChild(el);
+  });
+  const firstDow = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (let i=0; i<firstDow; i++) {
+    const el = document.createElement('div'); el.className='cal-cell empty'; grid.appendChild(el);
+  }
+  for (let d=1; d<=daysInMonth; d++) {
+    const dt = new Date(calYear, calMonth, d);
+    const key = toKey(calYear, calMonth+1, d);
+    const dow = dt.getDay();
+    const isPast = dt < today;
+    const isSel = !!selectedDates[key];
+    const isToday = dt.getTime() === today.getTime();
+    const el = document.createElement('div');
+    let cls = 'cal-cell';
+    if (isPast) cls += ' past';
+    else if (isSel) cls += ' selected';
+    else if (dow===0) cls += ' sun';
+    else if (dow===6) cls += ' sat';
+    if (isToday && !isSel) cls += ' today';
+    el.className = cls; 
+    const availStr = LAB_AVAILABILITY[key];
+    el.innerHTML = `<span>${d}</span>` + (availStr && !isPast ? `<span class="cal-avail">${availStr.replace(/[()]/g,'').split(' ')[0]}</span>` : '');
+    if (!isPast) el.onclick = () => toggleDate(key);
+    grid.appendChild(el);
+  }
+}
+
+function toggleDate(key) {
+  if (selectedDates[key]) {
+    delete selectedDates[key];
+  } else {
+    const avail = LAB_AVAILABILITY[key];
+    if (avail) {
+      const cleaned = avail.replace(/\(.*?\)\s*/g, '').trim();
+      const [start, end] = cleaned.split('~');
+      selectedDates[key] = { start: start || '10:30', end: end || '18:00' };
+    } else {
+      selectedDates[key] = { start: '10:30', end: '17:00' };
+    }
+  }
+  renderCal(); renderSlots();
+}
+
+function renderSlots() {
+  const wrap = document.getElementById('slots-wrap');
+  wrap.innerHTML = '';
+  const keys = Object.keys(selectedDates).sort();
+  if (!keys.length) {
+    wrap.innerHTML = '<div class="no-slots">日程が選択されていません</div>'; return;
+  }
+  keys.forEach(key => {
+    const s = selectedDates[key];
+    const [y,m,d] = key.split('-');
+    const label = `${Number(m)}月${Number(d)}日（${DAYS[new Date(Number(y),Number(m)-1,Number(d)).getDay()]}）`;
+    const availStr = LAB_AVAILABILITY[key];
+    const item = document.createElement('div');
+    item.className = 'slot-item';
+    item.innerHTML = `
+      <div class="slot-date-label">${label}</div>
+      <div class="time-wrap">
+        <input type="time" value="${s.start}" onchange="updateSlot('${key}','start',this.value)">
+        <span class="time-sep">〜</span>
+        <input type="time" value="${s.end}" onchange="updateSlot('${key}','end',this.value)">
+      </div>
+      ${availStr ? `<span class="slot-avail-hint">実験室空き: ${availStr}</span>` : ''}
+      <button class="slot-del" onclick="removeSlot('${key}')">✕</button>`;
+    wrap.appendChild(item);
+  });
+}
+
+function updateSlot(key, field, val) { if (selectedDates[key]) selectedDates[key][field] = val; }
+function removeSlot(key) { delete selectedDates[key]; renderCal(); renderSlots(); }
+
+function submitForm() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  if (!name)  { alert('お名前を入力してください。'); return; }
+  if (!email) { alert('メールアドレスを入力してください。'); return; }
+  if (!Object.keys(selectedDates).length) { alert('参加可能な日程を1日以上選択してください。'); return; }
+
+  const responses = JSON.parse(localStorage.getItem('sched_responses') || '[]');
+  const existing = responses.findIndex(r => r.email === email);
+  const now = new Date().toISOString();
+
+  const entry = {
+    id: existing >= 0 ? responses[existing].id : Date.now(),
+    name, email,
+    note: document.getElementById('f-note').value.trim(),
+    slots: JSON.parse(JSON.stringify(selectedDates)),
+    submittedAt: now
+  };
+
+  if (existing >= 0) {
+    if (!confirm(email + ' は既に回答があります。最新の内容で上書きしますか？')) return;
+    // Keep history
+    if (!responses[existing].history) responses[existing].history = [];
+    responses[existing].history.push({ slots: responses[existing].slots, submittedAt: responses[existing].submittedAt });
+    entry.history = responses[existing].history;
+    responses[existing] = entry;
+  } else {
+    responses.push(entry);
+  }
+
+  localStorage.setItem('sched_responses', JSON.stringify(responses));
+  lastEntry = entry;
+  buildMailto(entry);
+  document.getElementById('page-form').style.display = 'none';
+  document.getElementById('page-success').style.display = 'block';
+}
+
+function buildMailto(entry) {
+  const slots = Object.entries(entry.slots)
+    .sort(([a],[b]) => a.localeCompare(b))
+    .map(([k,v]) => {
+      const [y,m,d] = k.split('-');
+      const dow = DAYS[new Date(Number(y),Number(m)-1,Number(d)).getDay()];
+      return `  ${Number(m)}月${Number(d)}日（${dow}）${v.start}〜${v.end}`;
+    }).join('\n');
+  const body = `【足関節底屈運動実験 参加日程登録 控え】\n\nお名前：${entry.name}\nメール：${entry.email}\n\n参加可能日程：\n${slots}\n${entry.note ? '\n備考：' + entry.note : ''}\n\n登録日時：${new Date(entry.submittedAt).toLocaleString('ja-JP')}\n\n---\n担当：宮脇康太（久保研究室 M1）\nkotamiya-jubi1020@g.ecc.u-tokyo.ac.jp`;
+  const link = document.getElementById('mailto-link');
+  link.href = `mailto:${entry.email}?subject=${encodeURIComponent('【控え】足関節実験 参加日程登録')}&body=${encodeURIComponent(body)}`;
+}
+
+function clearForm() {
+  if (!confirm('入力内容をすべてクリアしますか？')) return;
+  selectedDates = {};
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-note').value = '';
+  renderCal(); renderSlots();
+}
+
+function resetForm() {
+  selectedDates = {};
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-note').value = '';
+  renderCal(); renderSlots();
+  document.getElementById('page-success').style.display = 'none';
+  document.getElementById('page-form').style.display = 'block';
+}
+
+initCal();
+</script>
+</body>
+</html>
